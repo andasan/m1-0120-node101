@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 
-const members = [
+let members = [
     {
         id:1,
         name: 'JC',
@@ -26,7 +26,7 @@ const members = [
 
 //body parser middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended:false}));
 
 
 // app.get('/', (req,res)=> {
@@ -41,8 +41,35 @@ app.get('/api/members', (req,res) => {
     res.json(members);
 });
 
+//create a member
 app.post('/api/members/post', (req, res)=>  {
-    res.send(req.body);
+    // res.send(req.body);
+    const newMember = {
+        id: Math.random(), //uuid
+        ...req.body
+    }
+    members.push(newMember);
+    res.json(members);
+});
+
+//update a member
+app.put('/api/members/post/:id', (req,res) => {
+    const found = members.some(member => member.id === +req.params.id);
+
+    if(found){
+        const newArr = members.map(member => {
+            if(member.id === +req.params.id){
+                const updatedMember = {
+                    ...member,
+                    ...req.body
+                };
+                console.log(updatedMember);
+                return updatedMember;
+            }
+            return member;
+        });
+        res.json({ msg: 'Members updated', newArr});
+    }
 })
 
 //catch-all-middleware
