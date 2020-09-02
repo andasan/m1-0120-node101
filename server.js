@@ -57,20 +57,18 @@ app.put('/api/members/post/:id', (req,res) => {
     const found = members.some(member => member.id === +req.params.id);
 
     if(found){
-        const newArr = members.map(member => {
+        members = members.map(member => {
             if(member.id === +req.params.id){
-                const updatedMember = {
+                return {
                     ...member,
                     ...req.body
                 };
-                console.log(updatedMember);
-                return updatedMember;
             }
             return member;
         });
-        res.json({ msg: 'Members updated', newArr});
+        res.json({ msg: 'Members updated', members});
     }
-})
+});
 
 //catch-all-middleware
 app.use((req,res)=> {
