@@ -28,6 +28,8 @@ let members = [
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
+// app.use(router)
+
 
 // app.get('/', (req,res)=> {
 //     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -36,13 +38,25 @@ app.use(bodyParser.urlencoded({extended:false}));
 //set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+//Get ALL members
 app.get('/api/members', (req,res) => {
     res.json(members);
 });
 
-//create a member
-app.post('/api/members/post', (req, res)=>  {
+//Get ONE member
+app.get('/api/member/:id', (req,res) => {
+    const found = members.some(member => member.id === +req.params.id);
+
+    if(found){
+        res.json(members.filter(member => member.id === parseInt(req.params.id))) //parseInt(req.params.id) same as +req.params.id
+    }else{
+        //400 = Bad Request
+        res.status(400).json({ msg: `No member with the id of ${req.params.id}`});
+    }
+});
+
+//Create a member
+app.post('/api/members', (req, res)=>  {
     // res.send(req.body);
     const newMember = {
         id: Math.random(), //uuid
@@ -52,8 +66,8 @@ app.post('/api/members/post', (req, res)=>  {
     res.json(members);
 });
 
-//update a member
-app.put('/api/members/post/:id', (req,res) => {
+//Update a member
+app.put('/api/members/:id', (req,res) => {
     const found = members.some(member => member.id === +req.params.id);
 
     if(found){
@@ -68,9 +82,12 @@ app.put('/api/members/post/:id', (req,res) => {
         });
         res.json({ msg: 'Member updated', members});
     }else{
+        //400 =  Bad Request
         res.status(400).json({msg: `Unable to update. Member of id ${req.params.id} does not exist.`})
     }
 });
+
+//Delete a member
 
 //catch-all-middleware
 app.use((req,res)=> {
