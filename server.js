@@ -66,7 +66,9 @@ app.put('/api/members/post/:id', (req,res) => {
             }
             return member;
         });
-        res.json({ msg: 'Members updated', members});
+        res.json({ msg: 'Member updated', members});
+    }else{
+        res.status(400).json({msg: `Unable to update. Member of id ${req.params.id} does not exist.`})
     }
 });
 
