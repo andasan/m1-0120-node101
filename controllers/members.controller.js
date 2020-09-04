@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const members = require('../model/Member');
 
 const idFilter = req => member => member.id === +req.params.id;
@@ -27,12 +28,14 @@ exports.getOneMember = (req,res) => {
 exports.createMember = (req, res)=>  {
     // res.send(req.body);
     const newMember = {
-        id: Math.random(), //uuid
+        // id: Math.random(),
+        id: uuidv4(),
         status: 'active',
         ...req.body
     }
     members.push(newMember);
-    res.json(members);
+    // res.json(members);
+    res.redirect('/');
 };
 
 exports.updateMember = (req,res) => {
