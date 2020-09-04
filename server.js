@@ -7,10 +7,14 @@ const app = express();
 const memberRoute = require('./routes/routes');
 const members = require('./model/Member');
 
-//Template Engine
-app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
-app.set('views', 'views'); //explicitly setting the views directory
+//Template Engine - Handlebars
+// app.engine('handlebars', exphbs({ defaultLayout: 'main'}));
+// app.set('view engine', 'handlebars');
+// app.set('views', 'views'); //explicitly setting the views directory
+
+//Template Engine - EJS
+app.set('view engine', 'ejs');
+app.set('views', 'views-ejs'); //explicitly setting the views directory
 
 //body parser middleware
 app.use(bodyParser.json());
@@ -23,7 +27,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 // });
 app.get('/', (req,res)=>{
     res.render('index', { 
-        title: 'Hola with Handlebars', 
+        title: 'Hola with EJS', 
         members
     });
 })
